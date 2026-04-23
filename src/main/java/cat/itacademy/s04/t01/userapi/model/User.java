@@ -19,4 +19,9 @@ public class User {
     {
         id = java.util.UUID.randomUUID();
     }
+
+    public UUID getId()
+    {
+        return id;
+    }
 }
