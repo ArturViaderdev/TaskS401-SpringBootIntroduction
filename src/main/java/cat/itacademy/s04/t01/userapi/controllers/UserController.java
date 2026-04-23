@@ -12,8 +12,15 @@ import java.util.UUID;
 public class UserController {
     UserManager userManager;
     @GetMapping("/users")
-    public List<User> getUsers(){
-        return userManager.getUsers();
+    public List<User> getUsers(@RequestParam (defaultValue = "") String name){
+        if(name.isEmpty())
+        {
+            return userManager.getUsers();
+        }
+        else
+        {
+            return userManager.findByName(name);
+        }
     }
 
     @PostMapping("/users")

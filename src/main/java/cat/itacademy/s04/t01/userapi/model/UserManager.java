@@ -44,4 +44,10 @@ public class UserManager {
             return null;
         }
     }
+
+    public List<User> findByName(String name)
+    {
+        List<User> result = users.stream().filter(o -> o.getName().toLowerCase().contains(name.toLowerCase())).toList();
+        return result;
+    }
 }
