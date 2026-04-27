@@ -25,24 +25,10 @@ public class UserManager {
 
     public User getUserId(UUID idUser)
     {
-        boolean found = false;
-        int count;
-        for(count=0;count<users.size();count++)
-        {
-            if(users.get(count).getId().equals(idUser))
-            {
-                found=true;
-                break;
-            }
-        }
-        if(found)
-        {
-            return users.get(count);
-        }
-        else
-        {
-            return null;
-        }
+       return users.stream()
+               .filter(o -> o.getId().equals(idUser))
+               .findFirst()
+               .orElse(null);
     }
 
     public List<User> findByName(String name)
