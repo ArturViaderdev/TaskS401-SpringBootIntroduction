@@ -1,48 +1,57 @@
 package cat.itacademy.s04.t01.userapi.controllers;
 
+import cat.itacademy.s04.t01.userapi.EmailExistsException;
+import cat.itacademy.s04.t01.userapi.UserService;
+import cat.itacademy.s04.t01.userapi.UserServiceImpl;
 import cat.itacademy.s04.t01.userapi.model.User;
-import cat.itacademy.s04.t01.userapi.model.UserManager;
+import cat.itacademy.s04.t01.userapi.InMemoryUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @RestController
 public class UserController {
-    UserManager userManager;
+    UserService userService;
     @GetMapping("/users")
     public List<User> getUsers(@RequestParam (defaultValue = "") String name){
         if(name.isEmpty())
         {
-            return userManager.getUsers();
+            return userService.readAllUsers();
         }
         else
         {
-            return userManager.findByName(name);
+            return userService.findByName(name);
         }
     }
 
     @PostMapping("/users")
+    @ResponseStatus(HttpStatus.CREATED)
     public User postUsers(@RequestBody User user)
     {
-        userManager.addUser(user);
-        return user;
+        try
+        {
+            return userService.createUser(user);
+        } catch (EmailExistsException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/users/{id}")
     public User getUserId(@PathVariable String id)
     {
-        User user = userManager.getUserId(UUID.fromString(id));
-        if(user == null)
+        Optional<User> user = userService.getUserId(UUID.fromString(id));
+        if(user.isEmpty())
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return user;
+        return user.get();
     }
 
     public UserController()
     {
-        userManager = new UserManager();
+        userService = new UserServiceImpl(new InMemoryUserRepository());
     }
 }
