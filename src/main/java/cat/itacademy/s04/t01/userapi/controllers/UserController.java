@@ -18,7 +18,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/users")
-    public List<User> getUsers(@RequestParam(defaultValue = "") String name) {
+    public List<User> getUsers(@RequestParam(name = "name", defaultValue = "") String name) {
         if (name.isEmpty()) {
             return userService.readAllUsers();
         } else {
