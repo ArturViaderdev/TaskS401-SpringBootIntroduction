@@ -19,7 +19,6 @@ public class InMemoryUserRepository implements UserRepository{
 
     @Override
     public User save(User user) {
-        user.setUUID();
         users.add(user);
         return users.get(users.size()-1);
     }

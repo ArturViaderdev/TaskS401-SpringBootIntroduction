@@ -9,24 +9,20 @@ public class User {
     public String name;
     public String email;
 
-    public User(String name,String email)
-    {
+    public User(String name, String email) {
         this.name = name;
         this.email = email;
     }
 
-    public void setUUID()
-    {
+    public void setUUID() {
         id = java.util.UUID.randomUUID();
     }
 
-    public UUID getId()
-    {
+    public UUID getId() {
         return id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 

@@ -1,7 +1,7 @@
 package cat.itacademy.s04.t01.userapi;
 
-public class EmailExistsException extends Exception{
-    public EmailExistsException()
+public class EmailAlreadyExistsException extends Exception{
+    public EmailAlreadyExistsException()
     {
         super("Error afegint usuari. El email ja existeix.");
     }

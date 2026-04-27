@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    public User createUser(User user) throws EmailExistsException;
+    public User createUser(User user) throws EmailAlreadyExistsException;
     public List<User> readAllUsers();
     public List<User> findByName(String name);
     public Optional<User> getUserId(UUID id);

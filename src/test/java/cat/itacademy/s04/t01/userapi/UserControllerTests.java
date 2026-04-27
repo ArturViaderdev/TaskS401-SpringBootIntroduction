@@ -45,7 +45,7 @@ class UserControllerTests {
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
 				.content("{\n" +
 				"  \"name\": \"Ada Lovelace\",\n" +
-				"  \"email\": \"ada@example.com\"\n" +
+				"  \"email\": \"adal@example.com\"\n" +
 				"}")).andExpect(jsonPath("$.id").exists());
 	}
 
@@ -57,7 +57,7 @@ class UserControllerTests {
 			MvcResult result = mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
 					.content("{\n" +
 					"  \"name\": \"Ada Lovelace\",\n" +
-					"  \"email\": \"ada@example.com\"\n" +
+					"  \"email\": \"adalovelace@example.com\"\n" +
 					"}")).andReturn();
 			String response = result.getResponse().getContentAsString();
 			String id = JsonPath.parse(response).read("$.id").toString();
@@ -65,7 +65,7 @@ class UserControllerTests {
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.id").value(id))
 					.andExpect(jsonPath("$.name").value("Ada Lovelace"))
-					.andExpect(jsonPath("$.email").value("ada@example.com"));
+					.andExpect(jsonPath("$.email").value("adalovelace@example.com"));
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
