@@ -17,6 +17,7 @@ import java.util.UUID;
 public class UserController {
     UserService userService;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users")
     public List<User> getUsers(@RequestParam(name = "name", defaultValue = "") String name) {
         if (name.isEmpty()) {
@@ -36,6 +37,7 @@ public class UserController {
         }
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}")
     public User getUserId(@PathVariable String id) {
         Optional<User> user = userService.getUserId(UUID.fromString(id));
