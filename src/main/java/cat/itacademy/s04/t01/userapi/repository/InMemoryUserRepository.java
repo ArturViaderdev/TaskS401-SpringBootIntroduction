@@ -1,4 +1,4 @@
-package cat.itacademy.s04.t01.userapi;
+package cat.itacademy.s04.t01.userapi.repository;
 
 import cat.itacademy.s04.t01.userapi.model.User;
 import org.springframework.stereotype.Repository;
@@ -9,18 +9,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class InMemoryUserRepository implements UserRepository{
-    public static List<User> users;
+public class InMemoryUserRepository implements UserRepository {
+    private List<User> users;
 
-    public InMemoryUserRepository()
-    {
+    public InMemoryUserRepository() {
         users = new ArrayList<>();
     }
 
     @Override
     public User save(User user) {
         users.add(user);
-        return users.get(users.size()-1);
+        return users.get(users.size() - 1);
     }
 
     @Override
@@ -43,14 +42,11 @@ public class InMemoryUserRepository implements UserRepository{
 
     @Override
     public boolean existsByEmail(String email) {
-        List<User> result = users.stream().filter(o->o.getEmail().equals(email)).toList();
-        if(!result.isEmpty())
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return users.stream().anyMatch(o -> o.getEmail().toLowerCase().equals(email.toLowerCase()));
+    }
+
+    @Override
+    public void removeAll() {
+        users.clear();
     }
 }

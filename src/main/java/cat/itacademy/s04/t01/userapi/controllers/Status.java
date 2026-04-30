@@ -1,10 +1,13 @@
 package cat.itacademy.s04.t01.userapi.controllers;
 
 public class Status {
-    public String status;
+    private String status;
 
-    public Status(String status)
-    {
+    public Status(String status) {
         this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

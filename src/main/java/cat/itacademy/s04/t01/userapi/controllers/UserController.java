@@ -1,16 +1,11 @@
 package cat.itacademy.s04.t01.userapi.controllers;
 
-import cat.itacademy.s04.t01.userapi.EmailAlreadyExistsException;
-import cat.itacademy.s04.t01.userapi.UserService;
-import cat.itacademy.s04.t01.userapi.UserServiceImpl;
+import cat.itacademy.s04.t01.userapi.services.UserService;
 import cat.itacademy.s04.t01.userapi.model.User;
-import cat.itacademy.s04.t01.userapi.InMemoryUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -30,24 +25,16 @@ public class UserController {
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public User postUsers(@RequestBody User user) {
-        try {
-            return userService.createUser(user);
-        } catch (EmailAlreadyExistsException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
+        return userService.createUser(user);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}")
     public User getUserId(@PathVariable String id) {
-        Optional<User> user = userService.getUserId(UUID.fromString(id));
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return user.get();
+        return userService.getUserId(UUID.fromString(id));
     }
 
-    public UserController() {
-        userService = new UserServiceImpl(new InMemoryUserRepository());
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 }
