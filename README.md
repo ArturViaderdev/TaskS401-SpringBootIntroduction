@@ -1,6 +1,329 @@
 # Task S401 -Introduction to Spring Boot
 
-# Description
+## 🛠 Technologies
+
+- Java
+
+## Project Structure
+
+````bash
+├── create_user_secuence.png
+├── HELP.md
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── README.md
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── cat
+│   │   │       └── itacademy
+│   │   │           └── s04
+│   │   │               └── t01
+│   │   │                   └── userapi
+│   │   │                       ├── controllers
+│   │   │                       │   ├── HealthController.java
+│   │   │                       │   ├── Status.java
+│   │   │                       │   └── UserController.java
+│   │   │                       ├── exception
+│   │   │                       │   ├── EmailAlreadyExistsException.java
+│   │   │                       │   ├── ErrorResponse.java
+│   │   │                       │   ├── GlobalExceptionHandler.java
+│   │   │                       │   └── UserIdDoesNotExists.java
+│   │   │                       ├── model
+│   │   │                       │   └── User.java
+│   │   │                       ├── repository
+│   │   │                       │   ├── InMemoryUserRepository.java
+│   │   │                       │   └── UserRepository.java
+│   │   │                       ├── services
+│   │   │                       │   ├── UserServiceImpl.java
+│   │   │                       │   └── UserService.java
+│   │   │                       └── UserapiApplication.java
+│   │   └── resources
+│   │       ├── application.properties
+│   │       ├── static
+│   │       └── templates
+│   └── test
+│       └── java
+│           └── cat
+│               └── itacademy
+│                   └── s04
+│                       └── t01
+│                           └── userapi
+│                               ├── HealthControllerTest.java
+│                               ├── UserControllerTests.java
+│                               ├── UserRepositoryTests.java
+│                               └── UserServiceImplTest.java
+└── terminal.png
+````
+
+## 🚀 Instal.lation and execution
+
+1. Clone the repository:
+
+````bash
+git clone https://github.com/ArturViaderdev/TaskS401-SpringBootIntroduction.git
+````
+
+2. Compile the jar:
+
+````bash
+mvn clean package
+````
+
+3. Execute the jar:
+
+````bash
+java -jar target/userapi-0.0.1-SNAPSHOT.jar 
+````
+
+You need the command mvn installed in the operating system.
+
+In linux based on debian you can install with:
+
+`````bash 
+sudo apt-get install maven
+`````
+
+In linux fedora:
+
+````bash
+sudo yum install maven
+````
+
+Or you can run the tests on IntelliJ IDEA and also with be executed on compile time.
+
+This project is a Spring Boot webservice. You can use It with http petitions for example in postman.
+
+## API Endpoints
+
+### Base URL
+
+`http://localhost:9000`
+
+---
+
+### 1. Health Check
+
+#### `GET /health`
+
+Checks whether the API is running correctly.
+
+##### Response `200 OK`
+
+```json
+{
+  "status": "OK"
+}
+```
+
+---
+
+### 2. Get All Users
+
+#### `GET /users`
+
+Returns all users stored in the system.
+
+##### Query Parameters
+
+| Parameter | Type   | Required | Description                                                   |
+|-----------|--------|----------|---------------------------------------------------------------|
+| `name`    | string | No       | Filters users by name using a case-insensitive partial match. |
+
+##### Example Request
+
+```http
+GET /users
+```
+
+##### Response `200 OK`
+
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Ada Lovelace",
+    "email": "ada@example.com"
+  },
+  {
+    "id": "6b7c1f52-9c8d-4a7d-a3fd-0d4d4f8e9abc",
+    "name": "Joan Pere",
+    "email": "joan@example.com"
+  }
+]
+```
+
+---
+
+### 3. Search Users by Name
+
+#### `GET /users?name={value}`
+
+Returns users whose name contains the given value, ignoring uppercase and lowercase differences.
+
+##### Query Parameters
+
+| Parameter | Type   | Required | Description                         |
+|-----------|--------|----------|-------------------------------------|
+| `name`    | string | Yes      | Name fragment used to filter users. |
+
+##### Example Request
+
+```http
+GET /users?name=jo
+```
+
+##### Response `200 OK`
+
+```json
+[
+  {
+    "id": "6b7c1f52-9c8d-4a7d-a3fd-0d4d4f8e9abc",
+    "name": "Joan Pere",
+    "email": "joan@example.com"
+  },
+  {
+    "id": "ab12cd34-ef56-7890-ab12-cd34ef567890",
+    "name": "Mojo Juan",
+    "email": "mojo@example.com"
+  }
+]
+```
+
+---
+
+### 4. Create User
+
+#### `POST /users`
+
+Creates a new user and automatically generates a UUID.
+
+##### Request Body
+
+| Field   | Type   | Required | Description                           |
+|---------|--------|----------|---------------------------------------|
+| `name`  | string | Yes      | User's full name.                     |
+| `email` | string | Yes      | User's email address. Must be unique. |
+
+##### Example Request
+
+```http
+POST /users
+Content-Type: application/json
+```
+
+```json
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com"
+}
+```
+
+##### Response `201 Created`
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Ada Lovelace",
+  "email": "ada@example.com"
+}
+```
+
+##### Error `409 Conflict`
+
+Returned when the email already exists.
+
+```json
+{
+  "status": 409,
+  "error": "Error afegint usuari. El email ja existeix.",
+  "path": "/users",
+  "timestamp": 1714550000000
+}
+```
+
+---
+
+### 5. Get User by ID
+
+#### `GET /users/{id}`
+
+Returns a single user by UUID.
+
+##### Path Parameters
+
+| Parameter | Type | Required | Description      |
+|-----------|------|----------|------------------|
+| `id`      | UUID | Yes      | User identifier. |
+
+##### Example Request
+
+```http
+GET /users/550e8400-e29b-41d4-a716-446655440000
+```
+
+##### Response `200 OK`
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Ada Lovelace",
+  "email": "ada@example.com"
+}
+```
+
+##### Error `404 Not Found`
+
+Returned when no user exists with the given ID.
+
+```json
+{
+  "status": 404,
+  "error": "User with this id does not exist.",
+  "path": "/users/550e8400-e29b-41d4-a716-446655440099",
+  "timestamp": 1714550000000
+}
+```
+
+##### Error `400 Bad Request`
+
+Returned when the `id` is not a valid UUID.
+
+```json
+{
+  "status": 400,
+  "error": "The id is not a valid UUID.",
+  "path": "/users/not-a-uuid",
+  "timestamp": 1714550000000
+}
+```
+
+---
+
+## Error Format
+
+All handled API errors return a JSON object with the following structure:
+
+| Field       | Type    | Description                         |
+|-------------|---------|-------------------------------------|
+| `status`    | integer | HTTP status code.                   |
+| `error`     | string  | Error message.                      |
+| `path`      | string  | Request path that caused the error. |
+| `timestamp` | long    | Unix timestamp in milliseconds.     |
+
+Example:
+
+```json
+{
+  "status": 404,
+  "error": "User with this id does not exist.",
+  "path": "/users/123",
+  "timestamp": 1714550000000
+}
+```
+
+# The goal
 
 This exercise is your first introduction to Spring Boot and REST API development. The goal is to build a minimal but
 functional API that can receive and return data in JSON format, using HTTP methods and applying good practices from the
