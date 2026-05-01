@@ -30,8 +30,8 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{id}")
-    public User getUserId(@PathVariable String id) {
-        return userService.getUserId(UUID.fromString(id));
+    public User getUserId(@PathVariable UUID id) {
+        return userService.getUserId(id);
     }
 
     public UserController(UserService userService) {

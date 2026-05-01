@@ -13,7 +13,11 @@ public class User {
         this.email = email;
     }
 
-    public void setUUID(UUID id) {
+    public User() {
+
+    }
+
+    public void setId(UUID id) {
         this.id = id;
     }
 

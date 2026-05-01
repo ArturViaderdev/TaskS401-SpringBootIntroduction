@@ -88,7 +88,7 @@ public class UserServiceImplTest {
     public void getUserId_shouldReturnUser() {
         UUID id = UUID.randomUUID();
         User user = new User("Pedro", "pedro@gmail.com");
-        user.setUUID(id);
+        user.setId(id);
         when(userRepository.findById(id)).thenReturn((Optional.of(user)));
         User result = userService.getUserId(id);
         assertNotNull(result);

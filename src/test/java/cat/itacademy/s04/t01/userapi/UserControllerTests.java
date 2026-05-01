@@ -12,7 +12,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import tools.jackson.databind.ObjectMapper;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -29,9 +29,6 @@ class UserControllerTests {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private UserService userService;
 
     @BeforeEach
@@ -39,7 +36,6 @@ class UserControllerTests {
         userService.removeAllUsers();
     }
 
-    @Order(1)
     @Test
     void getUsers_returnsEmptyListInitially() throws Exception {
         mockMvc.perform(get("/users")).andExpect(status().isOk())
@@ -47,7 +43,6 @@ class UserControllerTests {
                 .andExpect(jsonPath("$").isEmpty());
     }
 
-    @Order(2)
     @Test
     void createUser_returnsUserWithId() throws Exception {
         mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +55,6 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.email").value("adal@example.com"));
     }
 
-    @Order(3)
     @Test
     void getUserById_returnsCorrectUser() throws Exception {
         // Primer afegeix un usuari amb POST
@@ -80,7 +74,6 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.email").value("adalovelace@example.com"));
     }
 
-    @Order(4)
     @Test
     void getUserById_returnsNotFoundIfMissing() throws Exception {
 
@@ -88,7 +81,6 @@ class UserControllerTests {
 
     }
 
-    @Order(5)
     @Test
     void getUsers_withNameParam_returnsFilteredUsers() throws Exception {
         mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
@@ -116,5 +108,11 @@ class UserControllerTests {
                 .andReturn();
         List<String> names = JsonPath.read((mvcResult.getResponse()), "$[*].name");
         Assertions.assertThat(names).allMatch(name -> name.toLowerCase().contains("jo"));
+    }
+
+    @Test
+    void getUserById_invalidId() throws Exception {
+        mockMvc.perform(get("/users/{id}", "abc"))
+                .andExpect(status().isBadRequest());
     }
 }

@@ -16,14 +16,14 @@ public class UserRepositoryTests {
 
     @BeforeEach
     public void clean() {
-        userRepository.removeAll();
+        userRepository = new InMemoryUserRepository();
     }
 
 
     @Test
     public void saveTest() {
         User userAdd = new User("Pedro", "pedro@gmail.com");
-        userAdd.setUUID(java.util.UUID.randomUUID());
+        userAdd.setId(java.util.UUID.randomUUID());
         User savedUser = userRepository.save(userAdd);
         Assertions.assertTrue(userAdd.equals(savedUser));
     }
@@ -31,11 +31,11 @@ public class UserRepositoryTests {
     @Test
     public void findAllTest() {
         User userAdd = new User("Pedro", "pedro@gmail.com");
-        userAdd.setUUID(java.util.UUID.randomUUID());
+        userAdd.setId(java.util.UUID.randomUUID());
         User userAddSecond = new User("Ramon", "ramon@gmail.com");
-        userAddSecond.setUUID(java.util.UUID.randomUUID());
+        userAddSecond.setId(java.util.UUID.randomUUID());
         User userAddThird = new User("Juan", "juan@gmail.com");
-        userAddThird.setUUID(java.util.UUID.randomUUID());
+        userAddThird.setId(java.util.UUID.randomUUID());
         userRepository.save(userAdd);
         userRepository.save(userAddSecond);
         userRepository.save(userAddThird);
@@ -48,19 +48,17 @@ public class UserRepositoryTests {
 
     @Test
     public void findByIdTest() {
-        User user = userRepository.save(new User("Pedro", "pedro@gmail.com"));
-        user.setUUID(java.util.UUID.randomUUID());
+        User user = new User("Pedro", "pedro@gmail.com");
+        user.setId(java.util.UUID.randomUUID());
+        user = userRepository.save(user);
         Optional<User> readed = userRepository.findById(user.getId());
         Assertions.assertTrue(!(readed.isEmpty()));
+        Assertions.assertEquals(user, readed.get());
     }
 
     @Test
     public void findByIdEmpty() {
         Optional<User> readed = userRepository.findById(UUID.randomUUID());
         Assertions.assertTrue(readed.isEmpty());
-    }
-
-    public UserRepositoryTests() {
-        userRepository = new InMemoryUserRepository();
     }
 }
