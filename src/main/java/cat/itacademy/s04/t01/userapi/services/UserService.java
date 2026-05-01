@@ -4,7 +4,6 @@ import cat.itacademy.s04.t01.userapi.exception.EmailAlreadyExistsException;
 import cat.itacademy.s04.t01.userapi.model.User;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {

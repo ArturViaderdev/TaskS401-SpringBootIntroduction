@@ -9,10 +9,17 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({EmailAlreadyExistsException.class, UserIdDoesNotExists.class})
-    public ResponseEntity<ErrorResponse> handleException(RuntimeException e, WebRequest request) {
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleExceptionEmail(RuntimeException e, WebRequest request) {
         String path = ((ServletWebRequest) request).getRequest().getRequestURI();
         ErrorResponse body = new ErrorResponse(HttpStatus.CONFLICT, e.getMessage(), path);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(UserIdDoesNotExists.class)
+    public ResponseEntity<ErrorResponse> handleExceptionUser(RuntimeException e, WebRequest request) {
+        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
+        ErrorResponse body = new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage(), path);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 }

@@ -1,7 +1,5 @@
 package cat.itacademy.s04.t01.userapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Objects;
 import java.util.UUID;
 
